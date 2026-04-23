@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Feed with Infinite Scroll</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Post Feed</h1>
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-input"
+                    placeholder="Search posts by title or content..." autocomplete="off">
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div id="posts-container" class="posts-container">
+            </div>
+
+            <div id="loading-indicator" class="loading-indicator hidden">
+                <div class="spinner"></div>
+                <p>Loading posts...</p>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div id="no-results" class="no-results hidden">
+                <div class="no-results-content">
+                    <span class="no-results-icon">🔍</span>
+                    <p>No posts found matching your search criteria.</p>
+                    <p class="no-results-suggestion">Try different keywords or clear the search field.</p>
+                </div>
+            </div>
+
+            <div id="end-of-results" class="end-of-results hidden">
+                <p>You've reached the end of the feed 📋</p>
+            </div>
+
+            <div id="sentinel" class="sentinel"></div>
+        </main>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="render.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
