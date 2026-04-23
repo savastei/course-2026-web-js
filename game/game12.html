@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shut the Box · чистый стиль</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="game">
+        <h2>🎲 Shut the Box</h2>
+        <div class="sub">закрой свои числа · от 1 до 12</div>
+
+
+        <div class="player-picker">
+            <label>👥 Игроков</label>
+            <div class="picker-control">
+                <button id="decreasePlayers">–</button>
+                <span id="playerCountDisplay">2</span>
+                <button id="increasePlayers">+</button>
+            </div>
+        </div>
+
+
+        <div class="turn-panel">
+            <div class="turn-badge">
+                <div class="avatar" id="currentPlayerAvatar">1</div>
+                <span id="turnText">Ход Игрока 1</span>
+            </div>
+            <div id="winnerMessage" class="winner-announce"></div>
+        </div>
+
+
+        <div class="dice-zone">
+            <div class="dice-row">
+                <div class="die" id="die1">⚀</div>
+                <div class="die" id="die2">⚁</div>
+            </div>
+            <div id="choice" class="action-row"></div>
+        </div>
+
+        <div id="playersContainer" class="boards"></div>
+
+        <div class="reset-wrap">
+            <button class="reset-btn" id="resetGame">🔄 Новая игра</button>
+        </div>
+        <div class="info-note">Выбери числа или сумму — они уберутся с поля.</div>
+    </div>
+
+    <script src="main.js">
+    </script>
+</body>
+
+</html>
