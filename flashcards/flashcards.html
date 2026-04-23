@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Flashcard Deck · study manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <h1>📇 flashcard deck</h1>
+
+        <div class="deck-selector">
+            <label for="deckSelect">📚 Deck</label>
+            <select id="deckSelect"></select>
+            <button class="btn" id="newDeckBtn" type="button">＋ New deck</button>
+            <button class="btn btn-danger" id="deleteDeckBtn" type="button" style="margin-left:auto;">🗑 Delete
+                deck</button>
+        </div>
+
+        <div class="form-grid">
+            <div class="input-group">
+                <label>📄 Front (question)</label>
+                <input type="text" id="frontInput" placeholder="e.g. H₂O" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>📘 Back (answer)</label>
+                <input type="text" id="backInput" placeholder="Water" autocomplete="off">
+            </div>
+            <button class="btn btn-primary" id="addCardBtn" style="align-self:flex-end;">➕ Add card</button>
+            <button class="btn" id="cancelEditBtn" style="align-self:flex-end; display:none;">✖ Cancel edit</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-weight: 600;">📋 All cards in deck</h3>
+            <button class="btn" id="shuffleDeckBtn">🔀 Shuffle deck</button>
+        </div>
+        <div class="table-wrapper">
+            <table id="cardsTable">
+                <thead>
+                    <tr>
+                        <th>Front</th>
+                        <th>Back</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div id="tableEmptyMessage" class="message-empty" style="display:none;">No cards in this deck. Add one above.
+        </div>
+
+        <div class="study-section">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <span style="font-weight: 600; font-size: 1.1rem;">🧠 Study</span>
+                <select id="studyFilterSelect">
+                    <option value="all">All cards</option>
+                    <option value="unlearned" selected>Only unlearned</option>
+                </select>
+                <span class="position-indicator" id="studyPosition">0 / 0</span>
+            </div>
+
+            <div class="flashcard-view" id="flashcardDisplay">
+                ⬅️ Add cards to start
+            </div>
+
+            <div class="study-controls" style="justify-content: center;">
+                <div class="nav-buttons">
+                    <button class="btn" id="prevCardBtn" title="Previous card">◀ Prev</button>
+                    <button class="btn" id="flipCardBtn">🔄 Flip</button>
+                    <button class="btn" id="nextCardBtn" title="Next card">Next ▶</button>
+                </div>
+            </div>
+            <div style="font-size:0.85rem; color:#475569; text-align:center;" id="sideHint">Showing: front</div>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="state.js"></script>
+    <script src="render.js"></script>
+    <script src="actions.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
