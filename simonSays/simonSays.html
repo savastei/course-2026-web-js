@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says • Piano</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="game-container">
+        <div class="status-panel">
+            <div class="stat">
+                <span class="stat-label">Level</span>
+                <span class="stat-value" id="levelDisplay">1</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Best</span>
+                <span class="stat-value" id="bestDisplay">0</span>
+            </div>
+            <div class="message" id="messageBox">Press New Game</div>
+        </div>
+
+        <div class="piano">
+            <div class="keys-wrapper">
+                <div class="white-keys" id="whiteKeysContainer"></div>
+                <div class="black-keys" id="blackKeysContainer"></div>
+            </div>
+        </div>
+
+        <button class="btn" id="startBtn">New Game</button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
