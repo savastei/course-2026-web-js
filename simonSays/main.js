@@ -1,17 +1,17 @@
 (function () {
   const SOUNDS = {
-    C: "A1.mp3",
-    D: "B1.mp3",
-    E: "C1.mp3",
-    F: "D1.mp3",
-    G: "E1.mp3",
-    A: "F1.mp3",
-    B: "G1.mp3",
-    "C#": "Ab1.mp3",
-    "D#": "Bb1.mp3",
-    "F#": "Db1.mp3",
-    "G#": "Eb1.mp3",
-    "A#": "Gb1.mp3",
+    C: "sounds/A1.mp3",
+    D: "sounds/B1.mp3",
+    E: "sounds/C1.mp3",
+    F: "sounds/D1.mp3",
+    G: "sounds/E1.mp3",
+    A: "sounds/F1.mp3",
+    B: "sounds/G1.mp3",
+    "C#": "sounds/Ab1.mp3",
+    "D#": "sounds/Bb1.mp3",
+    "F#": "sounds/Db1.mp3",
+    "G#": "sounds/Eb1.mp3",
+    "A#": "sounds/Gb1.mp3",
   };
 
   const WHITE = ["C", "D", "E", "F", "G", "A", "B"];
