@@ -1,126 +1,83 @@
-class PostFeedApp {
-  constructor() {
-    this.searchInput = document.querySelector("#search-input");
-    this.sentinel = document.querySelector("#sentinel");
+import { getPosts } from "./api.js";
+import {
+  renderPosts,
+  updateStatus,
+  startLoadingDots,
+  stopLoadingDots,
+} from "./ui.js";
+import { sleep } from "./utils.js";
 
-    this.currentPage = 1;
-    this.currentSearchQuery = "";
-    this.isLoading = false;
-    this.hasMorePosts = true;
-    this.debounceTimer = null;
-    this.observer = null;
+const T = 500;
 
-    this.init();
-  }
+const postsContainer = document.querySelector("#posts");
+const loadingElement = document.querySelector("#loading");
+const observerElement = document.querySelector("#observer-target");
+const searchInput = document.querySelector("#search");
 
-  init() {
-    this.setupEventListeners();
-    this.setupIntersectionObserver();
-    this.loadInitialPosts();
-  }
+let currentPage = 1;
+const postsPerPage = 10;
+let currentSearch = "";
+let praporFetch = false;
+let Timer;
 
-  setupEventListeners() {
-    this.searchInput.addEventListener("input", (e) => {
-      clearTimeout(this.debounceTimer);
-      this.debounceTimer = setTimeout(() => {
-        this.handleSearch(e.target.value);
-      }, 300);
-    });
-  }
+async function loadPosts() {
+  if (praporFetch) return;
+  praporFetch = true;
 
-  setupIntersectionObserver() {
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !this.isLoading && this.hasMorePosts) {
-            console.log("Loading more posts...");
-            this.loadMorePosts();
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1,
-      },
-    );
+  startLoadingDots(loadingElement);
 
-    this.observer.observe(this.sentinel);
-  }
+  try {
+    const results = await Promise.all([
+      getPosts(currentPage, postsPerPage, currentSearch),
+      sleep(T),
+    ]);
+    const data = results[0];
 
-  async handleSearch(query) {
-    this.currentSearchQuery = query;
-    this.currentPage = 1;
-    this.hasMorePosts = true;
+    observerElement.style.display =
+      data.length < postsPerPage ? "none" : "block";
 
-    renderer.clearAll();
-
-    await this.fetchAndRenderPosts(false);
-  }
-
-  async loadInitialPosts() {
-    renderer.showLoading();
-    await this.fetchAndRenderPosts(false);
-  }
-
-  async loadMorePosts() {
-    if (this.isLoading || !this.hasMorePosts) return;
-
-    this.currentPage++;
-    console.log(`Fetching page ${this.currentPage}...`);
-    await this.fetchAndRenderPosts(true);
-  }
-
-  async fetchAndRenderPosts(append = false) {
-    this.isLoading = true;
-    renderer.showLoading();
-    renderer.hideError();
-
-    try {
-      const result = await apiService.fetchPosts(
-        this.currentPage,
-        this.currentSearchQuery,
-      );
-
-      if (result.posts.length > 0) {
-        renderer.renderPosts(result.posts, append);
-        this.hasMorePosts = result.hasMore;
-
-        if (!this.hasMorePosts) {
-          renderer.showEndOfResults();
-        }
-      } else {
-        if (!append) {
-          renderer.renderPosts([], false);
-        }
-        this.hasMorePosts = false;
-      }
-
-      console.log(
-        `Loaded ${result.posts.length} posts from page ${this.currentPage}`,
-      );
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      renderer.showError(error.message || "An unexpected error occurred");
-
-      if (append) {
-        this.currentPage--;
-      }
-    } finally {
-      this.isLoading = false;
-      renderer.hideLoading();
-
-      if (!this.hasMorePosts) {
-        this.observer.unobserve(this.sentinel);
-        console.log("No more posts to load");
-      } else {
-        this.observer.observe(this.sentinel);
-      }
+    if (data.length === 0 && currentPage === 1) {
+      stopLoadingDots();
+      updateStatus(loadingElement, "No posts found");
+      return;
     }
+
+    renderPosts(postsContainer, data);
+    stopLoadingDots();
+    updateStatus(loadingElement, "", false);
+  } catch (error) {
+    stopLoadingDots();
+    updateStatus(loadingElement, "Error loading");
+    console.error(error);
+  } finally {
+    stopLoadingDots();
+    praporFetch = false;
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  new PostFeedApp();
-  console.log("Post Feed App initialized");
+const observer = new IntersectionObserver(
+  (observs) => {
+    const target = observs[0];
+
+    if (target.isIntersecting && !praporFetch) {
+      currentPage++;
+      loadPosts();
+    }
+  },
+  { rootMargin: "50px" },
+);
+
+observer.observe(observerElement);
+
+searchInput.addEventListener("input", (x) => {
+  currentSearch = x.target.value;
+  clearTimeout(Timer);
+
+  Timer = setTimeout(() => {
+    currentPage = 1;
+    postsContainer.innerHTML = "";
+    loadPosts();
+  }, 300);
 });
+
+loadPosts();
