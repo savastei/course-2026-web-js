@@ -1,87 +1,285 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Flashcard Deck · study manager</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcards</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #0f0f13;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px;
+            gap: 24px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .card-input {
+            flex: 1;
+            height: 130px;
+            background: #1c1c24;
+            border: 2px solid #2e2e3a;
+            border-radius: 14px;
+            padding: 16px;
+            color: #fff;
+            font-size: 1rem;
+            resize: none;
+            transition: border-color .25s;
+            outline: none;
+        }
+
+        .card-input::placeholder {
+            color: #555;
+        }
+
+        .card-input:focus {
+            border-color: #7c6af7;
+        }
+
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity .2s, transform .1s;
+        }
+
+        .btn:hover {
+            opacity: .88;
+        }
+
+        .btn:active {
+            transform: scale(.96);
+        }
+
+        #createCardBut {
+            background: linear-gradient(135deg, #7c6af7, #5e50e0);
+            color: #fff;
+            padding: 11px 28px;
+            font-size: .95rem;
+        }
+
+        #addButton {
+            background: #2e2e3a;
+            color: #aaa;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        #addButton:hover {
+            background: #3a3a4a;
+            color: #fff;
+        }
+
+
+        #nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .deck-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #1c1c24;
+            border: 2px solid #2e2e3a;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+        }
+
+        .deck-tab.active {
+            border-color: #7c6af7;
+            background: #23233a;
+        }
+
+        .deck-tab input {
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            font-size: .88rem;
+            width: 100px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .deck-tab input:focus {
+            cursor: text;
+        }
+
+        .deck-tab .del-deck {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: .9rem;
+            line-height: 1;
+            padding: 0 2px;
+            transition: color .2s;
+        }
+
+        .deck-tab .del-deck:hover {
+            color: #ef5350;
+        }
+
+
+        .table-wrap {
+            width: 100%;
+            max-width: 760px;
+            background: #1c1c24;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid #2e2e3a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #16161e;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #666;
+        }
+
+        tbody tr {
+            border-top: 1px solid #2a2a35;
+            transition: background .15s;
+        }
+
+        tbody tr:hover {
+            background: #202028;
+        }
+
+        td {
+            padding: 11px 16px;
+            color: #ccc;
+            font-size: .92rem;
+            vertical-align: middle;
+        }
+
+        td.learned-cell {
+            text-align: center;
+        }
+
+        td.learned-cell input[type=checkbox] {
+            width: 16px;
+            height: 16px;
+            accent-color: #7c6af7;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: #ffa726;
+            color: #000;
+            padding: 5px 11px;
+            font-size: .8rem;
+            border-radius: 6px;
+        }
+
+        .btn-del {
+            background: #ef5350;
+            color: #fff;
+            padding: 5px 11px;
+            font-size: .8rem;
+            border-radius: 6px;
+            margin-left: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: #444;
+            font-size: .95rem;
+        }
+
+        #remember {
+            position: fixed;
+            bottom: 28px;
+            background: linear-gradient(135deg, #2196f3, #1565c0);
+            color: #fff;
+            padding: 14px 44px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 6px 24px rgba(33, 150, 243, .35);
+        }
+    </style>
 </head>
 
 <body>
-    <div class="app-container">
-        <h1>📇 flashcard deck</h1>
 
-        <div class="deck-selector">
-            <label for="deckSelect">📚 Deck</label>
-            <select id="deckSelect"></select>
-            <button class="btn" id="newDeckBtn" type="button">＋ New deck</button>
-            <button class="btn btn-danger" id="deleteDeckBtn" type="button" style="margin-left:auto;">🗑 Delete
-                deck</button>
-        </div>
+    <h1>✦ Flashcards</h1>
 
-        <div class="form-grid">
-            <div class="input-group">
-                <label>📄 Front (question)</label>
-                <input type="text" id="frontInput" placeholder="e.g. H₂O" autocomplete="off">
-            </div>
-            <div class="input-group">
-                <label>📘 Back (answer)</label>
-                <input type="text" id="backInput" placeholder="Water" autocomplete="off">
-            </div>
-            <button class="btn btn-primary" id="addCardBtn" style="align-self:flex-end;">➕ Add card</button>
-            <button class="btn" id="cancelEditBtn" style="align-self:flex-end; display:none;">✖ Cancel edit</button>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-weight: 600;">📋 All cards in deck</h3>
-            <button class="btn" id="shuffleDeckBtn">🔀 Shuffle deck</button>
-        </div>
-        <div class="table-wrapper">
-            <table id="cardsTable">
-                <thead>
-                    <tr>
-                        <th>Front</th>
-                        <th>Back</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
-        <div id="tableEmptyMessage" class="message-empty" style="display:none;">No cards in this deck. Add one above.
-        </div>
-
-        <div class="study-section">
-            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                <span style="font-weight: 600; font-size: 1.1rem;">🧠 Study</span>
-                <select id="studyFilterSelect">
-                    <option value="all">All cards</option>
-                    <option value="unlearned" selected>Only unlearned</option>
-                </select>
-                <span class="position-indicator" id="studyPosition">0 / 0</span>
-            </div>
-
-            <div class="flashcard-view" id="flashcardDisplay">
-                ⬅️ Add cards to start
-            </div>
-
-            <div class="study-controls" style="justify-content: center;">
-                <div class="nav-buttons">
-                    <button class="btn" id="prevCardBtn" title="Previous card">◀ Prev</button>
-                    <button class="btn" id="flipCardBtn">🔄 Flip</button>
-                    <button class="btn" id="nextCardBtn" title="Next card">Next ▶</button>
-                </div>
-            </div>
-            <div style="font-size:0.85rem; color:#475569; text-align:center;" id="sideHint">Showing: front</div>
-        </div>
+    <div class="input-row">
+        <textarea id="leftWindow" class="card-input" placeholder="Front side…"></textarea>
+        <textarea id="rightWindow" class="card-input" placeholder="Back side…"></textarea>
     </div>
 
-    <script src="storage.js"></script>
-    <script src="state.js"></script>
-    <script src="render.js"></script>
-    <script src="actions.js"></script>
+    <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn" id="createCardBut">＋ Add Card</button>
+    </div>
+
+    <div id="nav">
+        <button class="btn" id="addButton">＋</button>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Front</th>
+                    <th>Back</th>
+                    <th style="text-align:center">Learned</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <button class="btn" id="remember">Study →</button>
+
     <script src="main.js"></script>
 </body>
 
